@@ -1,0 +1,6 @@
+{
+  "appId": "com.zimbari.app",
+  "appName": "Zimbari",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

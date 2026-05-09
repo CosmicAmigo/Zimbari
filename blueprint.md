@@ -117,3 +117,5 @@ The system distinguishes between where money *must* go and where money *should* 
 2. **Biometric Lock:** Use Capacitor Biometrics (FaceID/Fingerprint) to lock the Business/Vault sections.
 3. **Local Notifications:** Remind the user at 8:00 PM: *"You had 3 M-Pesa transactions today. Tap to categorize them."*
 4. **Dark Mode Toggle:** A high-contrast dark version of the hex palette for night use.
+
+Should be Production ready. DATABASE_URL and GOOGLE_CLIENT_ID are environment Variables. Database is a PostgreDB Server. Generate Query for Database as well

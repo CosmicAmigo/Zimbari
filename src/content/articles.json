@@ -1,0 +1,20 @@
+[
+  {
+    "id": "article-1",
+    "title": "How to Price Your Services for Growth",
+    "summary": "A practical guide to value-based pricing and margins for service-based businesses.",
+    "tag": "Services"
+  },
+  {
+    "id": "article-2",
+    "title": "Using Goals to Protect Your Savings",
+    "summary": "Learn why separating goals from spendable balance helps prevent impulse payments.",
+    "tag": "Savings"
+  },
+  {
+    "id": "article-3",
+    "title": "Importing M-Pesa Data with CSV and PDF",
+    "summary": "Fast onboarding for business statements and historical transaction reconciliation.",
+    "tag": "Onboarding"
+  }
+]
