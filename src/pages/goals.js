@@ -1,15 +1,11 @@
-import { renderNav, renderCards, createGoalCard } from '../ui/components.js';
+import { fetchDashboardData } from '../modules/auth.js';
+import { renderCards, renderNav, createGoalCard } from '../ui/components.js';
 
 const appRoot = document.getElementById('app');
 
-const state = {
-  goals: [
-    { id: 'goal-tuition', name: 'Tuition', amount: 1900, progress: 0.48 },
-    { id: 'goal-inventory', name: 'Inventory Fund', amount: 1250, progress: 0.65 }
-  ]
-};
-
-function renderPage() {
+async function renderPage() {
+  const dashboard = await fetchDashboardData();
+  const goals = dashboard?.goals || [];
   appRoot.innerHTML = '';
   appRoot.appendChild(renderNav());
 
@@ -17,7 +13,7 @@ function renderPage() {
   header.innerHTML = `<h1 class="page-title">Goals</h1>`;
   appRoot.appendChild(header);
 
-  appRoot.appendChild(renderCards('Your Goals', state.goals, createGoalCard));
+  appRoot.appendChild(renderCards('Your Goals', goals, createGoalCard));
 }
 
 renderPage();

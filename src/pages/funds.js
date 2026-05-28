@@ -1,24 +1,28 @@
-import { renderNav, renderMetrics, renderCards, createBillCard, createGoalCard } from '../ui/components.js';
+import { fetchDashboardData } from '../modules/auth.js';
 import { computeSafeBalance } from '../modules/vault.js';
+import { renderCards, renderMetrics, renderNav, createBillCard, createGoalCard } from '../ui/components.js';
 
 const appRoot = document.getElementById('app');
 
 const state = {
-  totalFunds: 7800,
-  bills: [
-    { id: 'bill-rent', name: 'Rent', amount: 2100, due: 'Monthly' },
-    { id: 'bill-power', name: 'KPLC', amount: 430, due: 'Next 5 days' }
-  ],
-  goals: [
-    { id: 'goal-tuition', name: 'Tuition', amount: 1900, progress: 0.48 },
-    { id: 'goal-inventory', name: 'Inventory Fund', amount: 1250, progress: 0.65 }
-  ],
+  totalFunds: 0,
+  bills: [],
+  goals: [],
   businesses: [],
   transactions: [],
   articles: []
 };
 
-function renderPage() {
+function applyDashboardData(data) {
+  if (!data) return;
+  state.transactions = data.transactions || [];
+  state.bills = data.bills || [];
+  state.goals = data.goals || [];
+  state.totalFunds = state.transactions.reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+}
+
+async function renderPage() {
+  applyDashboardData(await fetchDashboardData());
   appRoot.innerHTML = '';
   appRoot.appendChild(renderNav());
 
