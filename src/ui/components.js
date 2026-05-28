@@ -2,6 +2,27 @@ import articles from '../content/articles.json';
 
 const articleItems = articles.slice(0, 3);
 
+function renderArticles() {
+  const section = document.createElement('section');
+  section.innerHTML = '<h2 class="section-title">Articles</h2>';
+  const grid = document.createElement('div');
+  grid.className = 'card-grid';
+
+  articleItems.forEach(article => {
+    const card = document.createElement('article');
+    card.className = 'article-card micro';
+    card.innerHTML = `
+      <small>${article.tag}</small>
+      <h4>${article.title}</h4>
+      <p>${article.summary}</p>
+      <a class="article-link" href="articles.html#${article.id}">Read article</a>
+    `;
+    grid.appendChild(card);
+  });
+  section.appendChild(grid);
+  return section;
+}
+
 function createCard(title, content) {
   const card = document.createElement('section');
   card.className = 'card';
@@ -179,6 +200,7 @@ export function renderNav() {
     <a href="bills.html">Bills</a>
     <a href="profile.html">Profile</a>
     <a href="settings.html">Settings</a>
+    <a href="articles.html">Articles</a>
   `;
   return nav;
 }

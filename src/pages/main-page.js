@@ -1,4 +1,5 @@
 import { renderNav, renderTransactionForm, renderTransactions } from '../ui/components.js';
+import { initializeTheme } from '../modules/theme.js';
 import { computeSafeBalance } from '../modules/vault.js';
 import { parseCsv } from '../modules/parser.js';
 import { listenForSms } from '../modules/mpesa-sms.js';
@@ -28,7 +29,7 @@ const state = {
 };
 
 const callbacks = {
-  onAddTransaction(transaction) {
+  async onAddTransaction(transaction) {
     state.transactions.push(transaction);
     if (transaction.category === 'Goal') {
       state.goals.push({ id: `goal-${Date.now()}`, name: transaction.description || 'New Goal', amount: transaction.amount, progress: 0 });
@@ -39,6 +40,7 @@ const callbacks = {
     } else {
       state.totalFunds += transaction.amount;
     }
+    await syncTransaction(transaction);
     renderPage();
   },
   onImportCsv(file) {
@@ -55,7 +57,7 @@ const callbacks = {
           state.totalFunds += tx.amount;
         }
       });
-      renderPage();
+      Promise.all(imported.map(syncTransaction)).finally(() => renderPage());
     });
   },
   onTriggerDaraja() {
@@ -63,9 +65,26 @@ const callbacks = {
   }
 };
 
+
+async function syncTransaction(transaction) {
+  await fetch('/api/transactions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...transaction, userGoogleSub: JSON.parse(localStorage.getItem('zimbari-user') || '{}').googleSub })
+  }).catch(() => null);
+}
+
 function renderPage() {
+  initializeTheme();
   appRoot.innerHTML = '';
   appRoot.appendChild(renderNav());
+  const user = JSON.parse(localStorage.getItem('zimbari-user') || '{}');
+  if (user.name) {
+    const profile = document.createElement('section');
+    profile.className = 'metric-panel micro';
+    profile.innerHTML = `<strong>Welcome, ${user.name}</strong><p>${user.email || ''}</p>`;
+    appRoot.appendChild(profile);
+  }
   appRoot.appendChild(renderTransactionForm(callbacks));
   appRoot.appendChild(renderTransactions(state.transactions));
 }
