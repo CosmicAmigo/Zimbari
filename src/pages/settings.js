@@ -1,3 +1,5 @@
+import { getStoredUser, fetchDashboardData } from '../modules/auth.js';
+import { applyTheme, getTheme, initializeTheme } from '../modules/theme.js';
 import { renderNav } from '../ui/components.js';
 import { applyTheme, initializeTheme } from '../modules/theme.js';
 
@@ -11,7 +13,7 @@ function renderPage() {
   const user = JSON.parse(localStorage.getItem('zimbari-user') || '{}');
 
   const header = document.createElement('header');
-  header.innerHTML = `<h1 class="page-title">Settings</h1>`;
+  header.innerHTML = `<h1 class="page-title">Settings</h1><p>Welcome, ${name}.</p>`;
   appRoot.appendChild(header);
 
   const content = document.createElement('section');

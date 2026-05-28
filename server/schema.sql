@@ -4,6 +4,7 @@ CREATE TABLE users (
   google_token TEXT,
   email TEXT UNIQUE NOT NULL,
   name TEXT,
+  picture TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

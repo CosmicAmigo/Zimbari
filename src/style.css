@@ -244,3 +244,78 @@ footer {
     align-items: flex-start;
   }
 }
+
+.brand-link {
+  font-weight: 800;
+  margin-right: 8px;
+}
+
+.nav {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav a {
+  padding: 8px 10px;
+  border-radius: 999px;
+}
+
+.nav a:hover {
+  background: rgba(18, 151, 253, 0.12);
+}
+
+.auth-note,
+.empty-state {
+  color: #5a5d63;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.setting-row input {
+  width: auto;
+}
+
+.account-summary,
+.welcome-panel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-summary img,
+.welcome-panel img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.compact-metrics {
+  margin: 20px 0;
+}
+
+:root[data-theme='dark'] {
+  background: #0f1115;
+  color: #e8edf4;
+}
+
+:root[data-theme='dark'] .transaction-list li,
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] select,
+:root[data-theme='dark'] textarea {
+  background: #0f1115;
+  color: #e8edf4;
+  border-color: #2e3742;
+}
+
+:root[data-theme='dark'] .article-card p,
+:root[data-theme='dark'] .card small,
+:root[data-theme='dark'] .auth-note,
+:root[data-theme='dark'] .empty-state {
+  color: #aab6c5;
+}

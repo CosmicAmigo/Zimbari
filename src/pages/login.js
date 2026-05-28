@@ -31,7 +31,10 @@ function renderPage() {
   appRoot.innerHTML = '';
 
   const header = document.createElement('header');
-  header.innerHTML = `<h1 class="page-title">Login to Zimbari</h1>`;
+  header.innerHTML = `
+    <h1 class="page-title">Login to Zimbari</h1>
+    <p>Use your Google account to keep your finance worlds synced.</p>
+  `;
   appRoot.appendChild(header);
 
   const form = document.createElement('section');

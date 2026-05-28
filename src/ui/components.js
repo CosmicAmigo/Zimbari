@@ -1,4 +1,5 @@
 import articles from '../content/articles.json';
+import { initializeTheme } from '../modules/theme.js';
 
 const articleItems = articles.slice(0, 3);
 
@@ -64,6 +65,13 @@ export function renderCards(title, list, cardFactory) {
   const grid = document.createElement('div');
   grid.className = 'card-grid';
 
+  if (!list.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty-state';
+    empty.textContent = 'Nothing here yet.';
+    grid.appendChild(empty);
+  }
+
   list.forEach(item => {
     grid.appendChild(cardFactory(item));
   });
@@ -74,27 +82,27 @@ export function renderCards(title, list, cardFactory) {
 
 export function createBillCard(bill) {
   const content = `
-    <small>${bill.due}</small>
-    <p>Ksh ${bill.amount.toLocaleString()}</p>
+    <small>${bill.due || bill.due_date || 'No due date'}</small>
+    <p>Ksh ${Number(bill.amount || 0).toLocaleString()}</p>
   `;
   return createCard(bill.name, content);
 }
 
 export function createGoalCard(goal) {
   const content = `
-    <small>${goal.progress * 100}% complete</small>
-    <p>Ksh ${goal.amount.toLocaleString()}</p>
+    <small>${Math.round(Number(goal.progress || 0) * 100)}% complete</small>
+    <p>Ksh ${Number(goal.amount || 0).toLocaleString()}</p>
   `;
   const card = createCard(goal.name, content);
-  card.appendChild(createProgress(goal.progress));
+  card.appendChild(createProgress(Number(goal.progress || 0)));
   return card;
 }
 
 export function createBusinessCard(business) {
   const content = `
-    <small>${business.type}</small>
-    <p>Ksh ${business.balance.toLocaleString()}</p>
-    <small>Growth ${business.growth}%</small>
+    <small>${business.type || business.business_type || 'Business'}</small>
+    <p>Ksh ${Number(business.balance || 0).toLocaleString()}</p>
+    <small>Growth ${business.growth || 0}%</small>
   `;
   return createCard(business.name, content);
 }
@@ -179,9 +187,16 @@ export function renderTransactions(transactions) {
   section.innerHTML = `<h2 class="section-title">Recent Transactions</h2>`;
   const list = document.createElement('ul');
   list.className = 'transaction-list';
+  if (!transactions.length) {
+    const item = document.createElement('li');
+    item.textContent = 'No transactions synced yet.';
+    list.appendChild(item);
+  }
+
   transactions.slice(-5).forEach(tx => {
     const item = document.createElement('li');
-    item.innerHTML = `<strong>${tx.amount} Ksh</strong> - ${tx.description} (${tx.category}) on ${tx.date}`;
+    const date = tx.date || tx.created_at || 'pending date';
+    item.innerHTML = `<strong>${Number(tx.amount || 0).toLocaleString()} Ksh</strong> - ${tx.description || 'Transaction'} (${tx.category || 'Uncategorized'}) on ${date}`;
     list.appendChild(item);
   });
   section.appendChild(list);
@@ -189,9 +204,11 @@ export function renderTransactions(transactions) {
 }
 
 export function renderNav() {
+  initializeTheme();
   const nav = document.createElement('nav');
   nav.className = 'nav';
   nav.innerHTML = `
+    <a class="brand-link" href="main.html">Zimbari</a>
     <a href="main.html">Main</a>
     <a href="funds.html">Funds</a>
     <a href="business.html">Business</a>

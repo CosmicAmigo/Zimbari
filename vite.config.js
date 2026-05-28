@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig({
   build: {
@@ -17,5 +17,5 @@ export default defineConfig({
         articles: 'articles.html'
       }
     }
-  }
+  };
 });

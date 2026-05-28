@@ -7,19 +7,10 @@ import { initDaraja } from './modules/daraja.js';
 const appRoot = document.getElementById('app');
 
 const state = {
-  totalFunds: 7800,
-  bills: [
-    { id: 'bill-rent', name: 'Rent', amount: 2100, due: 'Monthly' },
-    { id: 'bill-power', name: 'KPLC', amount: 430, due: 'Next 5 days' }
-  ],
-  goals: [
-    { id: 'goal-tuition', name: 'Tuition', amount: 1900, progress: 0.48 },
-    { id: 'goal-inventory', name: 'Inventory Fund', amount: 1250, progress: 0.65 }
-  ],
-  businesses: [
-    { id: 'biz-delivery', name: 'Delivery Goods', type: 'Goods', balance: 3900, growth: 12 },
-    { id: 'biz-marketing', name: 'Service Studio', type: 'Services', balance: 2250, growth: 9 }
-  ],
+  totalFunds: 0,
+  bills: [],
+  goals: [],
+  businesses: [],
   transactions: [],
   articles: []
 };
