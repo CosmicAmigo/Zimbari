@@ -13,7 +13,8 @@ export default defineConfig({
         expenditure: 'expenditure.html',
         goals: 'goals.html',
         bills: 'bills.html',
-        settings: 'settings.html'
+        settings: 'settings.html',
+        articles: 'articles.html'
       }
     }
   }
