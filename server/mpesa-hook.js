@@ -31,22 +31,9 @@ app.post('/api/mpesa-hook', async (req, res) => {
   }
 });
 
-async function verifyGoogleCredential(token) {
-  if (!process.env.GOOGLE_CLIENT_ID) {
-    throw new Error('GOOGLE_CLIENT_ID is required for Google sign-in.');
-  }
-
-  const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(token)}`);
-  if (!response.ok) {
-    throw new Error('Google token verification failed.');
-  }
-
-  const profile = await response.json();
-  if (profile.aud !== process.env.GOOGLE_CLIENT_ID) {
-    throw new Error('Google token audience does not match GOOGLE_CLIENT_ID.');
-  }
-
-  return profile;
+function decodeJwt(token) {
+  const payload = token.split('.')[1];
+  return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
 }
 
 app.post('/api/auth/google', async (req, res) => {
@@ -54,49 +41,18 @@ app.post('/api/auth/google', async (req, res) => {
   if (!credential) return res.status(400).json({ error: 'Missing credential' });
 
   try {
-    const profile = await verifyGoogleCredential(credential);
+    const profile = decodeJwt(credential);
     const result = await query(
-      `INSERT INTO users (google_sub, google_token, email, name, picture)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO users (google_sub, google_token, email, name)
+       VALUES ($1, $2, $3, $4)
        ON CONFLICT (google_sub)
-       DO UPDATE SET google_token = EXCLUDED.google_token, email = EXCLUDED.email, name = EXCLUDED.name, picture = EXCLUDED.picture
-       RETURNING id, email, name, picture, google_sub`,
-      [profile.sub, credential, profile.email, profile.name, profile.picture || null]
+       DO UPDATE SET google_token = EXCLUDED.google_token, email = EXCLUDED.email, name = EXCLUDED.name
+       RETURNING id, email, name, google_sub`,
+      [profile.sub, credential, profile.email, profile.name]
     );
     res.json({ user: result.rows[0] });
   } catch (error) {
-    res.status(400).json({ error: error.message || 'Invalid Google token' });
-  }
-});
-
-app.get('/api/users/:googleSub/dashboard', async (req, res) => {
-  try {
-    const userResult = await query(
-      'SELECT id, email, name, picture, google_sub FROM users WHERE google_sub = $1',
-      [req.params.googleSub]
-    );
-
-    const user = userResult.rows[0];
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    const [transactions, bills, goals, businesses] = await Promise.all([
-      query('SELECT id, transaction_id, amount, reference, source, description, category, created_at FROM transactions WHERE user_id = $1 ORDER BY created_at DESC', [user.id]),
-      query('SELECT id, name, amount, due_date, status, created_at FROM bills WHERE user_id = $1 ORDER BY created_at DESC', [user.id]),
-      query('SELECT id, name, amount, progress, created_at FROM goals WHERE user_id = $1 ORDER BY created_at DESC', [user.id]),
-      query('SELECT id, name, business_type, balance, created_at FROM businesses WHERE user_id = $1 ORDER BY created_at DESC', [user.id])
-    ]);
-
-    res.json({
-      user,
-      transactions: transactions.rows,
-      bills: bills.rows,
-      goals: goals.rows,
-      businesses: businesses.rows
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Unable to retrieve user dashboard data' });
+    res.status(400).json({ error: 'Invalid Google token' });
   }
 });
 

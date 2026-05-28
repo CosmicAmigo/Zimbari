@@ -1,16 +1,12 @@
 const THEME_KEY = 'zimbari-theme';
-const DEFAULT_THEME = 'light';
 
-export function applyTheme(theme = DEFAULT_THEME) {
-  const nextTheme = theme === 'dark' ? 'dark' : DEFAULT_THEME;
-  document.documentElement.dataset.theme = nextTheme;
-  localStorage.setItem(THEME_KEY, nextTheme);
-}
-
-export function getTheme() {
-  return localStorage.getItem(THEME_KEY) || DEFAULT_THEME;
+export function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem(THEME_KEY, theme);
 }
 
 export function initializeTheme() {
-  applyTheme(getTheme());
+  const saved = localStorage.getItem(THEME_KEY);
+  const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(saved || preferred);
 }
