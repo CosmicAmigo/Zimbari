@@ -1,6 +1,7 @@
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   google_sub TEXT UNIQUE,
+  google_token TEXT,
   email TEXT UNIQUE NOT NULL,
   name TEXT,
   picture TEXT,
