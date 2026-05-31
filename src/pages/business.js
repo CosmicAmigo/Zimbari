@@ -1,15 +1,11 @@
-import { renderNav, renderCards, createBusinessCard } from '../ui/components.js';
+import { fetchDashboardData } from '../modules/auth.js';
+import { renderCards, renderNav, createBusinessCard } from '../ui/components.js';
 
 const appRoot = document.getElementById('app');
 
-const state = {
-  businesses: [
-    { id: 'biz-delivery', name: 'Delivery Goods', type: 'Goods', balance: 3900, growth: 12 },
-    { id: 'biz-marketing', name: 'Service Studio', type: 'Services', balance: 2250, growth: 9 }
-  ]
-};
-
-function renderPage() {
+async function renderPage() {
+  const dashboard = await fetchDashboardData();
+  const businesses = dashboard?.businesses || [];
   appRoot.innerHTML = '';
   appRoot.appendChild(renderNav());
 
@@ -17,7 +13,7 @@ function renderPage() {
   header.innerHTML = `<h1 class="page-title">Business Worlds</h1>`;
   appRoot.appendChild(header);
 
-  appRoot.appendChild(renderCards('Your Businesses', state.businesses, createBusinessCard));
+  appRoot.appendChild(renderCards('Your Businesses', businesses, createBusinessCard));
 }
 
 renderPage();
