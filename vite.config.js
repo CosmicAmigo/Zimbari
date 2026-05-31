@@ -17,5 +17,5 @@ export default defineConfig({
         articles: 'articles.html'
       }
     }
-  };
+  }
 });
