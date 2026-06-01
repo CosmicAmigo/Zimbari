@@ -1,7 +1,10 @@
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
+  google_sub TEXT UNIQUE,
+  google_token TEXT,
   email TEXT UNIQUE NOT NULL,
   name TEXT,
+  picture TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -35,6 +38,7 @@ CREATE TABLE bills (
 
 CREATE TABLE transactions (
   id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id) ON DELETE SET NULL,
   transaction_id TEXT UNIQUE NOT NULL,
   amount NUMERIC NOT NULL,
   reference TEXT,

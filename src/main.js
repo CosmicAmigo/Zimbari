@@ -29,6 +29,8 @@ function loadState() {
   return stored ? JSON.parse(stored) : defaultState;
 }
 
+const state = loadState();
+
 function saveState(state) {
   localStorage.setItem('zimbari-state', JSON.stringify(state));
 }
