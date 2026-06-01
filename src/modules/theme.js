@@ -1,24 +1,12 @@
 const THEME_KEY = 'zimbari-theme';
 
-function setThemeAttributes(theme) {
-  document.documentElement.classList.toggle('dark', theme === 'dark');
-  if (theme === 'system') {
-    document.documentElement.removeAttribute('data-theme');
-    return;
-  }
+export function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
-}
-
-export function applyTheme(theme = 'system') {
-  const nextTheme = ['light', 'dark', 'system'].includes(theme) ? theme : 'system';
-  localStorage.setItem(THEME_KEY, nextTheme);
-  setThemeAttributes(nextTheme);
-}
-
-export function getTheme() {
-  return localStorage.getItem(THEME_KEY) || 'system';
+  localStorage.setItem(THEME_KEY, theme);
 }
 
 export function initializeTheme() {
-  setThemeAttributes(getTheme());
+  const saved = localStorage.getItem(THEME_KEY);
+  const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(saved || preferred);
 }

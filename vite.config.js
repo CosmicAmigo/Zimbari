@@ -1,37 +1,25 @@
 import { defineConfig, loadEnv } from 'vite';
 
-const input = {
-  index: 'index.html',
-  login: 'login.html',
-  main: 'main.html',
-  profile: 'profile.html',
-  funds: 'funds.html',
-  business: 'business.html',
-  expenditure: 'expenditure.html',
-  goals: 'goals.html',
-  bills: 'bills.html',
-  settings: 'settings.html',
-  articles: 'articles.html'
-};
-
-const pwaOptions = {
-  registerType: 'autoUpdate',
-  includeAssets: ['pwa.svg'],
-  manifest: {
-    name: 'Zimbari',
-    short_name: 'Zimbari',
-    description: 'Personal and business finance with safe-to-spend clarity.',
-    theme_color: '#2563eb',
-    background_color: '#f8fafc',
-    display: 'standalone',
-    scope: '/',
-    start_url: '/',
-    icons: [
-      {
-        src: '/pwa.svg',
-        sizes: 'any',
-        type: 'image/svg+xml',
-        purpose: 'any maskable'
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: {
+        index: 'index.html',
+        login: 'login.html',
+        main: 'main.html',
+        profile: 'profile.html',
+        funds: 'funds.html',
+        business: 'business.html',
+        expenditure: 'expenditure.html',
+        goals: 'goals.html',
+        bills: 'bills.html',
+        settings: 'settings.html',
+        articles: 'articles.html'
+      },
+      output: {
+        entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: 'js/[name]-[hash].js',
+        assetFileNames: '[ext]/[name]-[hash].[ext]'
       }
     ]
   },
@@ -64,19 +52,4 @@ async function getPwaPlugin() {
   } catch {
     return pwaFallbackPlugin();
   }
-}
-
-export default defineConfig(async ({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-  const googleClientId = env.GOOGLE_CLIENT_ID || env.VITE_GOOGLE_CLIENT_ID || '';
-
-  return {
-    plugins: [await getPwaPlugin()],
-    define: {
-      __GOOGLE_CLIENT_ID__: JSON.stringify(googleClientId)
-    },
-    build: {
-      rollupOptions: { input }
-    }
-  };
 });

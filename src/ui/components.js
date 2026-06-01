@@ -230,12 +230,16 @@ export function renderNav() {
 
   nav.className = 'nav sidebar-nav';
   nav.innerHTML = `
-    <a class="brand-link" href="main.html" aria-label="Zimbari home">
-      <span class="brand-mark">Z</span>
-      <span>Zimbari</span>
-    </a>
-    <div class="nav-section nav-primary">${primaryLinks.map(renderLink).join('')}</div>
-    <div class="nav-section nav-bottom">${secondaryLinks.map(renderLink).join('')}</div>
+    <a class="brand-link" href="main.html">Zimbari</a>
+    <a href="main.html">Main</a>
+    <a href="funds.html">Funds</a>
+    <a href="business.html">Business</a>
+    <a href="expenditure.html">Expenditure</a>
+    <a href="goals.html">Goals</a>
+    <a href="bills.html">Bills</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+    <a href="articles.html">Articles</a>
   `;
   return nav;
 }

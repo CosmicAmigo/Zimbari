@@ -1,7 +1,7 @@
 const USER_KEY = 'zimbari-user';
 const GOOGLE_SCRIPT_ID = 'google-identity-services';
 
-export const googleClientId = __GOOGLE_CLIENT_ID__;
+export const googleClientId = import.meta.env.GOOGLE_CLIENT_ID || import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 function decodeJwt(token) {
   const payload = token.split('.')[1];
