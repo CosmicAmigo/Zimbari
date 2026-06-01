@@ -3,9 +3,8 @@ import { initializeTheme } from '../modules/theme.js';
 import { computeSafeBalance } from '../modules/vault.js';
 import { parseCsv } from '../modules/parser.js';
 import { listenForSms } from '../modules/mpesa-sms.js';
-import { parseCsv } from '../modules/parser.js';
 import { initDaraja } from '../modules/daraja.js';
-import { renderNav, renderTransactionForm, renderTransactions } from '../ui/components.js';
+import { getStoredUser, fetchDashboardData } from '../modules/auth.js';
 
 const appRoot = document.getElementById('app');
 
@@ -73,15 +72,6 @@ const callbacks = {
   }
 };
 
-
-async function syncTransaction(transaction) {
-  await fetch('/api/transactions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...transaction, userGoogleSub: JSON.parse(localStorage.getItem('zimbari-user') || '{}').googleSub })
-  }).catch(() => null);
-}
-
 function renderPage() {
   initializeTheme();
   appRoot.innerHTML = '';
@@ -97,7 +87,10 @@ function renderPage() {
   appRoot.appendChild(renderTransactions(state.transactions));
 }
 
-hydrateFromDb().finally(renderPage);
+fetchDashboardData()
+  .then(applyDashboardData)
+  .catch(() => null)
+  .finally(renderPage);
 
 listenForSms(message => {
   console.log('SMS transaction candidate:', message);
