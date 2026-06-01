@@ -6,7 +6,7 @@ import { initDaraja } from './modules/daraja.js';
 
 const appRoot = document.getElementById('app');
 
-const state = {
+const defaultState = {
   totalFunds: 7800,
   bills: [
     { id: 'bill-rent', name: 'Rent', amount: 2100, due: 'Monthly' },
@@ -23,6 +23,17 @@ const state = {
   transactions: [],
   articles: []
 };
+
+function loadState() {
+  const stored = localStorage.getItem('zimbari-state');
+  return stored ? JSON.parse(stored) : defaultState;
+}
+
+function saveState(state) {
+  localStorage.setItem('zimbari-state', JSON.stringify(state));
+}
+
+const state = loadState();
 
 const callbacks = {
   onAddTransaction(transaction) {
