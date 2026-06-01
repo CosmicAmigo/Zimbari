@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
@@ -15,6 +15,11 @@ export default defineConfig({
         bills: 'bills.html',
         settings: 'settings.html',
         articles: 'articles.html'
+      },
+      output: {
+        entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: 'js/[name]-[hash].js',
+        assetFileNames: '[ext]/[name]-[hash].[ext]'
       }
     }
   }
