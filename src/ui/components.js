@@ -206,7 +206,29 @@ export function renderTransactions(transactions) {
 export function renderNav() {
   initializeTheme();
   const nav = document.createElement('nav');
-  nav.className = 'nav';
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const primaryLinks = [
+    { href: 'main.html', label: 'Main', icon: '⌂' },
+    { href: 'funds.html', label: 'Funds', icon: '◈' },
+    { href: 'business.html', label: 'Business', icon: '▦' },
+    { href: 'expenditure.html', label: 'Spend', icon: '↗' },
+    { href: 'goals.html', label: 'Goals', icon: '◎' },
+    { href: 'bills.html', label: 'Bills', icon: '◷' },
+    { href: 'articles.html', label: 'Articles', icon: '✦' }
+  ];
+  const secondaryLinks = [
+    { href: 'profile.html', label: 'Profile', icon: '◉' },
+    { href: 'settings.html', label: 'Settings', icon: '⚙' }
+  ];
+
+  const renderLink = link => `
+    <a class="nav-link ${currentPage === link.href ? 'active' : ''}" href="${link.href}">
+      <span class="nav-icon" aria-hidden="true">${link.icon}</span>
+      <span class="nav-label">${link.label}</span>
+    </a>
+  `;
+
+  nav.className = 'nav sidebar-nav';
   nav.innerHTML = `
     <a class="brand-link" href="main.html">Zimbari</a>
     <a href="main.html">Main</a>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Zimbari app icon">
+  <rect width="512" height="512" rx="112" fill="#2563eb"/>
+  <path d="M142 340 300 172H164v-62h236v50L242 328h160v62H142z" fill="#fff"/>
+  <circle cx="362" cy="150" r="38" fill="#60a5fa"/>
+</svg>
