@@ -2,6 +2,7 @@ import { renderNav, renderTransactionForm, renderTransactions } from '../ui/comp
 import { computeSafeBalance } from '../modules/vault.js';
 import { parseCsv } from '../modules/parser.js';
 import { listenForSms } from '../modules/mpesa-sms.js';
+import { parseCsv } from '../modules/parser.js';
 import { initDaraja } from '../modules/daraja.js';
 
 const appRoot = document.getElementById('app');
