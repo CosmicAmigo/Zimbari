@@ -1,17 +1,17 @@
-import articles from '../content/articles.json';
-import { initializeTheme } from '../modules/theme.js';
+import articles from "../content/articles.json";
+import { initializeTheme } from "../modules/theme.js";
 
 const articleItems = articles.slice(0, 3);
 
 function renderArticles() {
-  const section = document.createElement('section');
+  const section = document.createElement("section");
   section.innerHTML = '<h2 class="section-title">Articles</h2>';
-  const grid = document.createElement('div');
-  grid.className = 'card-grid';
+  const grid = document.createElement("div");
+  grid.className = "card-grid";
 
-  articleItems.forEach(article => {
-    const card = document.createElement('article');
-    card.className = 'article-card micro';
+  articleItems.forEach((article) => {
+    const card = document.createElement("article");
+    card.className = "article-card micro";
     card.innerHTML = `
       <small>${article.tag}</small>
       <h4>${article.title}</h4>
@@ -25,33 +25,39 @@ function renderArticles() {
 }
 
 function createCard(title, content) {
-  const card = document.createElement('section');
-  card.className = 'card';
+  const card = document.createElement("section");
+  card.className = "card";
   card.innerHTML = `<strong>${title}</strong>${content}`;
   return card;
 }
 
 function createProgress(progress) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'progress-bar';
+  const wrapper = document.createElement("div");
+  wrapper.className = "progress-bar";
   wrapper.innerHTML = `<div class="progress-filled" style="width: ${Math.min(100, Math.max(0, progress * 100))}%;"></div>`;
   return wrapper;
 }
 
 export function renderMetrics(state, safeBalance) {
-  const container = document.createElement('div');
-  container.className = 'metric-grid';
+  const container = document.createElement("div");
+  container.className = "metric-grid";
 
   const items = [
-    { label: 'Total Funds', value: `Ksh ${state.totalFunds.toLocaleString()}` },
-    { label: 'Safe to Spend', value: `Ksh ${safeBalance.toLocaleString()}` },
-    { label: 'Pending Bills', value: `Ksh ${state.bills.reduce((sum, bill) => sum + bill.amount, 0).toLocaleString()}` },
-    { label: 'Goal Allocations', value: `Ksh ${state.goals.reduce((sum, goal) => sum + goal.amount, 0).toLocaleString()}` }
+    { label: "Total Funds", value: `Ksh ${state.totalFunds.toLocaleString()}` },
+    { label: "Safe to Spend", value: `Ksh ${safeBalance.toLocaleString()}` },
+    {
+      label: "Pending Bills",
+      value: `Ksh ${state.bills.reduce((sum, bill) => sum + bill.amount, 0).toLocaleString()}`,
+    },
+    {
+      label: "Goal Allocations",
+      value: `Ksh ${state.goals.reduce((sum, goal) => sum + goal.amount, 0).toLocaleString()}`,
+    },
   ];
 
-  items.forEach(item => {
-    const panel = document.createElement('div');
-    panel.className = 'metric-panel';
+  items.forEach((item) => {
+    const panel = document.createElement("div");
+    panel.className = "metric-panel";
     panel.innerHTML = `<h3>${item.label}</h3><p>${item.value}</p>`;
     container.append(panel);
   });
@@ -60,19 +66,19 @@ export function renderMetrics(state, safeBalance) {
 }
 
 export function renderCards(title, list, cardFactory) {
-  const section = document.createElement('section');
+  const section = document.createElement("section");
   section.innerHTML = `<h2 class="section-title">${title}</h2>`;
-  const grid = document.createElement('div');
-  grid.className = 'card-grid';
+  const grid = document.createElement("div");
+  grid.className = "card-grid";
 
   if (!list.length) {
-    const empty = document.createElement('p');
-    empty.className = 'empty-state';
-    empty.textContent = 'Nothing here yet.';
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "Nothing here yet.";
     grid.appendChild(empty);
   }
 
-  list.forEach(item => {
+  list.forEach((item) => {
     grid.appendChild(cardFactory(item));
   });
 
@@ -82,7 +88,7 @@ export function renderCards(title, list, cardFactory) {
 
 export function createBillCard(bill) {
   const content = `
-    <small>${bill.due || bill.due_date || 'No due date'}</small>
+    <small>${bill.due || bill.due_date || "No due date"}</small>
     <p>Ksh ${Number(bill.amount || 0).toLocaleString()}</p>
   `;
   return createCard(bill.name, content);
@@ -100,7 +106,7 @@ export function createGoalCard(goal) {
 
 export function createBusinessCard(business) {
   const content = `
-    <small>${business.type || business.business_type || 'Business'}</small>
+    <small>${business.type || business.business_type || "Business"}</small>
     <p>Ksh ${Number(business.balance || 0).toLocaleString()}</p>
     <small>Growth ${business.growth || 0}%</small>
   `;
@@ -108,8 +114,8 @@ export function createBusinessCard(business) {
 }
 
 export function renderTransactionForm(callbacks) {
-  const section = document.createElement('section');
-  section.className = 'transaction-form';
+  const section = document.createElement("section");
+  section.className = "transaction-form";
   section.innerHTML = `
     <h2 class="section-title">Quick Entry</h2>
     <label>
@@ -132,14 +138,14 @@ export function renderTransactionForm(callbacks) {
     <button class="button">Add Transaction</button>
   `;
 
-  const button = section.querySelector('button');
-  button.addEventListener('click', () => {
+  const button = section.querySelector("button");
+  button.addEventListener("click", () => {
     const amount = Number(section.querySelector('[name="amount"]').value);
     const description = section.querySelector('[name="description"]').value;
     const category = section.querySelector('[name="category"]').value;
 
     if (!amount || isNaN(amount)) {
-      alert('Please enter a valid amount.');
+      alert("Please enter a valid amount.");
       return;
     }
 
@@ -148,7 +154,7 @@ export function renderTransactionForm(callbacks) {
       amount,
       description,
       category,
-      date: new Date().toISOString().slice(0, 10)
+      date: new Date().toISOString().slice(0, 10),
     });
   });
 
@@ -156,8 +162,8 @@ export function renderTransactionForm(callbacks) {
 }
 
 function renderImportWidgets(callbacks) {
-  const section = document.createElement('section');
-  section.className = 'import-widgets';
+  const section = document.createElement("section");
+  section.className = "import-widgets";
   section.innerHTML = `
     <h2 class="section-title">Upload & Import</h2>
     <label>
@@ -168,14 +174,14 @@ function renderImportWidgets(callbacks) {
   `;
 
   const fileInput = section.querySelector('input[type="file"]');
-  fileInput.addEventListener('change', event => {
+  fileInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (file) {
       callbacks.onImportCsv(file);
     }
   });
 
-  section.querySelector('button').addEventListener('click', () => {
+  section.querySelector("button").addEventListener("click", () => {
     callbacks.onTriggerDaraja();
   });
 
@@ -183,20 +189,20 @@ function renderImportWidgets(callbacks) {
 }
 
 export function renderTransactions(transactions) {
-  const section = document.createElement('section');
+  const section = document.createElement("section");
   section.innerHTML = `<h2 class="section-title">Recent Transactions</h2>`;
-  const list = document.createElement('ul');
-  list.className = 'transaction-list';
+  const list = document.createElement("ul");
+  list.className = "transaction-list";
   if (!transactions.length) {
-    const item = document.createElement('li');
-    item.textContent = 'No transactions synced yet.';
+    const item = document.createElement("li");
+    item.textContent = "No transactions synced yet.";
     list.appendChild(item);
   }
 
-  transactions.slice(-5).forEach(tx => {
-    const item = document.createElement('li');
-    const date = tx.date || tx.created_at || 'pending date';
-    item.innerHTML = `<strong>${Number(tx.amount || 0).toLocaleString()} Ksh</strong> - ${tx.description || 'Transaction'} (${tx.category || 'Uncategorized'}) on ${date}`;
+  transactions.slice(-5).forEach((tx) => {
+    const item = document.createElement("li");
+    const date = tx.date || tx.created_at || "pending date";
+    item.innerHTML = `<strong>${Number(tx.amount || 0).toLocaleString()} Ksh</strong> - ${tx.description || "Transaction"} (${tx.category || "Uncategorized"}) on ${date}`;
     list.appendChild(item);
   });
   section.appendChild(list);
@@ -205,49 +211,63 @@ export function renderTransactions(transactions) {
 
 export function renderNav() {
   initializeTheme();
-  const nav = document.createElement('nav');
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  const primaryLinks = [
-    { href: 'main.html', label: 'Main', icon: '⌂' },
-    { href: 'funds.html', label: 'Funds', icon: '◈' },
-    { href: 'business.html', label: 'Business', icon: '▦' },
-    { href: 'expenditure.html', label: 'Spend', icon: '↗' },
-    { href: 'goals.html', label: 'Goals', icon: '◎' },
-    { href: 'bills.html', label: 'Bills', icon: '◷' },
-    { href: 'articles.html', label: 'Articles', icon: '✦' }
-  ];
-  const secondaryLinks = [
-    { href: 'profile.html', label: 'Profile', icon: '◉' },
-    { href: 'settings.html', label: 'Settings', icon: '⚙' }
-  ];
+  const nav = document.createElement("nav");
+  const currentPage = window.location.pathname.split("/").pop() || "main.html";
 
-  const renderLink = link => `
-    <a class="nav-link ${currentPage === link.href ? 'active' : ''}" href="${link.href}">
-      <span class="nav-icon" aria-hidden="true">${link.icon}</span>
-      <span class="nav-label">${link.label}</span>
-    </a>
-  `;
-
-  nav.className = 'nav sidebar-nav';
+  nav.className = "nav sidebar-nav";
   nav.innerHTML = `
-    <a class="brand-link" href="main.html">Zimbari</a>
-    <a href="main.html">Main</a>
-    <a href="funds.html">Funds</a>
-    <a href="business.html">Business</a>
-    <a href="expenditure.html">Expenditure</a>
-    <a href="goals.html">Goals</a>
-    <a href="bills.html">Bills</a>
-    <a href="profile.html">Profile</a>
-    <a href="settings.html">Settings</a>
-    <a href="articles.html">Articles</a>
+    <a class="brand-link" href="main.html">
+      <span class="brand-mark">Z</span>
+      <span>Zimbari</span>
+    </a>
+    <div class="nav-section nav-primary">
+      <a class="nav-link ${currentPage === "main.html" ? "active" : ""}" href="main.html" title="Main">
+        <span class="nav-icon">⌂</span>
+        <span class="nav-label">Main</span>
+      </a>
+      <a class="nav-link ${currentPage === "funds.html" ? "active" : ""}" href="funds.html" title="Funds">
+        <span class="nav-icon">◈</span>
+        <span class="nav-label">Funds</span>
+      </a>
+      <a class="nav-link ${currentPage === "business.html" ? "active" : ""}" href="business.html" title="Business">
+        <span class="nav-icon">▦</span>
+        <span class="nav-label">Business</span>
+      </a>
+      <a class="nav-link ${currentPage === "expenditure.html" ? "active" : ""}" href="expenditure.html" title="Spend">
+        <span class="nav-icon">↗</span>
+        <span class="nav-label">Spend</span>
+      </a>
+      <a class="nav-link ${currentPage === "goals.html" ? "active" : ""}" href="goals.html" title="Goals">
+        <span class="nav-icon">◎</span>
+        <span class="nav-label">Goals</span>
+      </a>
+      <a class="nav-link ${currentPage === "bills.html" ? "active" : ""}" href="bills.html" title="Bills">
+        <span class="nav-icon">◷</span>
+        <span class="nav-label">Bills</span>
+      </a>
+      <a class="nav-link ${currentPage === "articles.html" ? "active" : ""}" href="articles.html" title="Articles">
+        <span class="nav-icon">✦</span>
+        <span class="nav-label">Articles</span>
+      </a>
+    </div>
+    <div class="nav-section nav-bottom">
+      <a class="nav-link ${currentPage === "profile.html" ? "active" : ""}" href="profile.html" title="Profile">
+        <span class="nav-icon">◉</span>
+        <span class="nav-label">Profile</span>
+      </a>
+      <a class="nav-link ${currentPage === "settings.html" ? "active" : ""}" href="settings.html" title="Settings">
+        <span class="nav-icon">⚙</span>
+        <span class="nav-label">Settings</span>
+      </a>
+    </div>
   `;
   return nav;
 }
 
 export function renderApp(root, state, safeBalance, callbacks) {
-  root.innerHTML = '';
+  root.innerHTML = "";
 
-  const header = document.createElement('header');
+  const header = document.createElement("header");
   header.innerHTML = `
     <div class="header-row">
       <div>
@@ -260,9 +280,11 @@ export function renderApp(root, state, safeBalance, callbacks) {
   root.appendChild(header);
 
   root.appendChild(renderMetrics(state, safeBalance));
-  root.appendChild(renderCards('Pending Bills', state.bills, createBillCard));
-  root.appendChild(renderCards('Goals & Vaults', state.goals, createGoalCard));
-  root.appendChild(renderCards('Business Worlds', state.businesses, createBusinessCard));
+  root.appendChild(renderCards("Pending Bills", state.bills, createBillCard));
+  root.appendChild(renderCards("Goals & Vaults", state.goals, createGoalCard));
+  root.appendChild(
+    renderCards("Business Worlds", state.businesses, createBusinessCard),
+  );
   root.appendChild(renderTransactionForm(callbacks));
   root.appendChild(renderImportWidgets(callbacks));
   root.appendChild(renderTransactions(state.transactions));
