@@ -4,7 +4,7 @@ const GOOGLE_SCRIPT_ID = "google-identity-services";
 
 export const googleClientId =
   import.meta.env.GOOGLE_CLIENT_ID ||
-  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+  process.env.GOOGLE_CLIENT_ID ||
   "";
 
 function decodeJwt(token) {
