@@ -212,50 +212,50 @@ export function renderTransactions(transactions) {
 export function renderNav() {
   initializeTheme();
   const nav = document.createElement("nav");
-  const currentPage = window.location.pathname.split("/").pop() || "main.html";
+  const currentPage = window.location.pathname.split("/").pop() || "main";
 
   nav.className = "nav sidebar-nav";
   nav.innerHTML = `
-    <a class="brand-link" href="main.html">
+    <a class="brand-link" href="main">
       <span class="brand-mark">Z</span>
       <span>Zimbari</span>
     </a>
     <div class="nav-section nav-primary">
-      <a class="nav-link ${currentPage === "main.html" ? "active" : ""}" href="main.html" title="Main">
+      <a class="nav-link ${currentPage === "main" ? "active" : ""}" href="main" title="Main">
         <span class="nav-icon">⌂</span>
         <span class="nav-label">Main</span>
       </a>
-      <a class="nav-link ${currentPage === "funds.html" ? "active" : ""}" href="funds.html" title="Funds">
+      <a class="nav-link ${currentPage === "funds" ? "active" : ""}" href="funds" title="Funds">
         <span class="nav-icon">◈</span>
         <span class="nav-label">Funds</span>
       </a>
-      <a class="nav-link ${currentPage === "business.html" ? "active" : ""}" href="business.html" title="Business">
+      <a class="nav-link ${currentPage === "business" ? "active" : ""}" href="business" title="Business">
         <span class="nav-icon">▦</span>
         <span class="nav-label">Business</span>
       </a>
-      <a class="nav-link ${currentPage === "expenditure.html" ? "active" : ""}" href="expenditure.html" title="Spend">
+      <a class="nav-link ${currentPage === "expenditure" ? "active" : ""}" href="expenditure" title="Spend">
         <span class="nav-icon">↗</span>
         <span class="nav-label">Spend</span>
       </a>
-      <a class="nav-link ${currentPage === "goals.html" ? "active" : ""}" href="goals.html" title="Goals">
+      <a class="nav-link ${currentPage === "goals" ? "active" : ""}" href="goals" title="Goals">
         <span class="nav-icon">◎</span>
         <span class="nav-label">Goals</span>
       </a>
-      <a class="nav-link ${currentPage === "bills.html" ? "active" : ""}" href="bills.html" title="Bills">
+      <a class="nav-link ${currentPage === "bills" ? "active" : ""}" href="bills" title="Bills">
         <span class="nav-icon">◷</span>
         <span class="nav-label">Bills</span>
       </a>
-      <a class="nav-link ${currentPage === "articles.html" ? "active" : ""}" href="articles.html" title="Articles">
+      <a class="nav-link ${currentPage === "articles" ? "active" : ""}" href="articles" title="Articles">
         <span class="nav-icon">✦</span>
         <span class="nav-label">Articles</span>
       </a>
     </div>
     <div class="nav-section nav-bottom">
-      <a class="nav-link ${currentPage === "profile.html" ? "active" : ""}" href="profile.html" title="Profile">
+      <a class="nav-link ${currentPage === "profile" ? "active" : ""}" href="profile" title="Profile">
         <span class="nav-icon">◉</span>
         <span class="nav-label">Profile</span>
       </a>
-      <a class="nav-link ${currentPage === "settings.html" ? "active" : ""}" href="settings.html" title="Settings">
+      <a class="nav-link ${currentPage === "settings" ? "active" : ""}" href="settings" title="Settings">
         <span class="nav-icon">⚙</span>
         <span class="nav-label">Settings</span>
       </a>
