@@ -109,3 +109,4 @@ FROM transactions t;
 - `server/mpesa-hook.js` exposes `/api/mpesa-hook` for webhook payloads.
 - `src/modules/parser.js` includes CSV import logic and a PDF stub for future onboarding support.
 - `src/modules/daraja.js` includes a placeholder Daraja integration path for STK push automation.
+# Deployment fix
