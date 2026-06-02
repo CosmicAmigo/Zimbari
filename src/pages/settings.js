@@ -86,7 +86,7 @@ function renderPage() {
   header.innerHTML = `<h1 class="page-title">Settings</h1><p>Welcome, ${displayName}.</p>`;
   appRoot.appendChild(header);
 
-  if (!storedUser?.googleSub) {
+  if (!storedUser) {
     renderSignedOutSettings();
     return;
   }

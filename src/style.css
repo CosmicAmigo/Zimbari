@@ -355,6 +355,13 @@ p {
   font-weight: 650;
 }
 
+.form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
 .transaction-form input,
 .transaction-form select,
 .transaction-form textarea,

@@ -30,6 +30,12 @@ function renderSignedOutProfile() {
 
 function renderSignedInProfile(user, dashboard) {
   const transactions = dashboard?.transactions || [];
+  const accountLabel = user.email
+    ? user.email
+    : user.guest
+      ? "Guest account"
+      : "Local account";
+
   const content = document.createElement("section");
   content.className = "transaction-form profile-card";
   content.innerHTML = `
@@ -37,7 +43,7 @@ function renderSignedInProfile(user, dashboard) {
       ${user.picture ? `<img src="${user.picture}" alt="${user.name}" />` : ""}
       <div>
         <strong>Welcome, ${user.name}</strong>
-        <p>${user.email || "Google account connected"}</p>
+        <p>${accountLabel}</p>
       </div>
     </div>
     <div class="metric-grid compact-metrics">
@@ -59,7 +65,7 @@ async function renderPage() {
   appRoot.appendChild(header);
 
   const storedUser = getStoredUser();
-  if (!storedUser?.googleSub) {
+  if (!storedUser) {
     renderSignedOutProfile();
     return;
   }
