@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google OAuth Login</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f9f9f9;">
+
+    <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+        <h2 style="font-family: sans-serif; margin-bottom: 20px; color: #333;">Welcome Back</h2>
+        
+        <div id="g_id_onload"
+             data-client_id="%GOOGLE_CLIENT_ID%"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="signin_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
+    </div>
+
+    <script>
+        // This function triggers automatically when a user successfully signs in
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID Token received from Google:", response.credential);
+            
+            // Send this token to your backend server using fetch() to verify it!
+            /*
+            fetch('/api/auth/google', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: response.credential })
+            });
+            */
+        }
+    </script>
+</body>
+</html>
