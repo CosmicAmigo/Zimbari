@@ -1,62 +1,51 @@
+-- Users table
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  google_sub TEXT UNIQUE,
-  google_token TEXT,
-  email TEXT UNIQUE NOT NULL,
-  name TEXT,
-  picture TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  google_sub VARCHAR(255) UNIQUE,
+  email VARCHAR(255) UNIQUE,
+  name VARCHAR(255),
+  picture VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE businesses (
-  id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  business_type TEXT NOT NULL,
-  balance NUMERIC DEFAULT 0,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE TABLE goals (
-  id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  amount NUMERIC NOT NULL,
-  progress NUMERIC DEFAULT 0,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE TABLE bills (
-  id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  amount NUMERIC NOT NULL,
-  due_date DATE,
-  status TEXT DEFAULT 'pending',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
+-- Transactions table
 CREATE TABLE transactions (
   id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE SET NULL,
-  transaction_id TEXT UNIQUE NOT NULL,
-  amount NUMERIC NOT NULL,
-  reference TEXT,
-  source TEXT,
+  user_id INTEGER REFERENCES users(id),
+  amount NUMERIC(10, 2) NOT NULL,
+  reference VARCHAR(255),
   description TEXT,
-  category TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  category VARCHAR(50),
+  transaction_id VARCHAR(255) UNIQUE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE articles (
+-- Bills table
+CREATE TABLE bills (
   id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  summary TEXT,
-  tag TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  user_id INTEGER REFERENCES users(id),
+  name VARCHAR(255) NOT NULL,
+  amount NUMERIC(10, 2) NOT NULL,
+  due_date DATE NOT NULL,
+  is_paid BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Example query: calculate safe balance from totals, goals, and bills.
--- SELECT 
---   (SUM(t.amount) - COALESCE((SELECT SUM(amount) FROM goals), 0) - COALESCE((SELECT SUM(amount) FROM bills), 0)) AS safe_balance
--- FROM transactions t;
+-- Goals table
+CREATE TABLE goals (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  name VARCHAR(255) NOT NULL,
+  target_amount NUMERIC(10, 2) NOT NULL,
+  current_amount NUMERIC(10, 2) DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Businesses table
+CREATE TABLE businesses (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
