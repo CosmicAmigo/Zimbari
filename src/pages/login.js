@@ -3,6 +3,12 @@ import { renderGoogleSignInButton, storeUser } from "../modules/auth.js";
 
 const appRoot = document.getElementById("app");
 
+// Helper function to check if a user is currently logged in
+function isUserLoggedIn() {
+  // Checks if a user session exists in localStorage
+  return localStorage.getItem("user") !== null;
+}
+
 function handleLocalSignIn(username, password) {
   if (!username || !password) {
     alert("Please enter both a username/email and password.");
@@ -54,7 +60,9 @@ function renderPage() {
       <button type="button" class="button" id="local-login">Login w/ email</button>
     </div>
     <div class="or-separator">or</div>
-    <div id="login-google-login" style="margin-top: 18px; display: flex; justify-content: center;"></div>
+    <div id="google-click-wrapper" style="margin-top: 18px; display: flex; justify-content: center;">
+      <div id="login-google-login"></div>
+    </div>
      <div class="or-separator">or</div>
     <div class="form-actions">
       <button type="button" class="button-secondary" id="guest-login">Continue as Guest</button>
@@ -72,14 +80,38 @@ function renderPage() {
     .querySelector("#guest-login")
     .addEventListener("click", handleContinueAsGuest);
 
-  renderGoogleSignInButton(form.querySelector("#login-google-login"), {
+  // --- GOOGLE SIGN IN CONDITIONAL LOGIC ---
+  const googleContainer = form.querySelector("#login-google-login");
+  const googleWrapper = form.querySelector("#google-click-wrapper");
+
+  // Intercept any click heading toward the Google button area
+  googleWrapper.addEventListener("click", (event) => {
+    if (isUserLoggedIn()) {
+      // If already logged in, block the click action and prevent redirection
+      event.preventDefault();
+      event.stopPropagation();
+      alert("You are already logged in!"); 
+    }
+  }, true); // Using capturing phase ('true') to catch the click before Google's script does
+
+  renderGoogleSignInButton(googleContainer, {
     onSuccess: () => {
-      window.location.href = "main.html";
+      // Only redirect if NOT logged in (double-check fallback)
+      if (!isUserLoggedIn()) {
+        window.location.href = "google.html";
+      }
     },
     text: "signin_with",
   }).catch(() => {
-    form.querySelector("#login-google-login").innerHTML =
-      `<button type="button" class="button-secondary">Continue with Google</button>`;
+    
+    googleContainer.querySelector("#google-fallback").addEventListener("click", (event) => {
+      if (isUserLoggedIn()) {
+        event.preventDefault();
+        alert("You are already logged in!");
+      } else {
+        window.location.href = "google.html";
+      }
+    });
   });
 }
 
