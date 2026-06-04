@@ -30,7 +30,8 @@ app.post('/api/auth/google', async (req, res) => {
 });
 
 // Catch-all route for SPA - must come AFTER all API routes
-app.get('*', (req, res) => {
+// Use middleware instead of app.get('*') to avoid path-to-regexp issues
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'), (err) => {
     if (err) {
       console.error('Error sending file:', err);
