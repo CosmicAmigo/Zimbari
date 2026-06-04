@@ -14,6 +14,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../dist')));
 
+// API Routes
 app.use('/api/goals', goalsRouter);
 app.use('/api/bills', billsRouter);
 app.use('/api/businesses', businessesRouter);
@@ -28,10 +29,28 @@ app.post('/api/auth/google', async (req, res) => {
   }
 });
 
-app.get('*', (req, res) => {
+// Catch-all route for SPA - must come AFTER all API routes
+app.get('/:path(*)', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully...');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully...');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
 });
