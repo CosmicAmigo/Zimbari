@@ -1,11 +1,11 @@
 
-const express = import('express');
-const path = import('path');
-const goalsRouter = import('./routes/goals');
-const billsRouter = import('./routes/bills');
-const businessesRouter = import('./routes/businesses');
-const transactionsRouter = import('./routes/transactions');
-const { findOrCreateUser } = import('./db');
+const express = require('express');
+const path = require('path');
+const goalsRouter = require('./routes/goals');
+const billsRouter = require('./routes/bills');
+const businessesRouter = require('./routes/businesses');
+const transactionsRouter = require('./routes/transactions');
+const { findOrCreateUser } = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
