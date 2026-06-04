@@ -8,7 +8,7 @@ function renderPage() {
   appRoot.appendChild(renderNav());
 
   const header = document.createElement('header');
-  header.innerHTML = '<h1 class="page-title">Learning Articles</h1><p>Guides to improve your money habits.</p>';
+  header.innerHTML = '<h1 class="page-title">Tips</h1><p>Guides to improve your money habits.</p>';
   appRoot.appendChild(header);
 
   const section = document.createElement('section');
