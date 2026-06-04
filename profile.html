@@ -16,6 +16,9 @@
     <script type="module" src="/src/pages/profile.js"></script>
      -->
     <div id="app" class="app-shell">
+      <h1>Log in to Your Account</h1>  
+      <div id="buttonDiv"></div>
+      <script>
         window.onload = function () {
             google.accounts.id.initialize({
                 client_id: "945932960900-fbm7qt7mg5ntuf3b2rk8q1nn7s43c022.apps.googleusercontent.com",
@@ -34,6 +37,7 @@
             alert("Login Successful! Check console for JWT payload.");
             console.log("JWT:", response.credential);
         }
+        </script>
     </div>
   </body>
 </html>
