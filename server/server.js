@@ -30,8 +30,13 @@ app.post('/api/auth/google', async (req, res) => {
 });
 
 // Catch-all route for SPA - must come AFTER all API routes
-app.get('/:path(*)', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'), (err) => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(500).send('Error loading page');
+    }
+  });
 });
 
 const server = app.listen(port, () => {
