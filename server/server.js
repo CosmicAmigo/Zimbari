@@ -1,11 +1,13 @@
-const express = require('express');
-const path = require('path');
-const goalsRouter = require('./routes/goals');
-const billsRouter = require('./routes/bills');
-const businessesRouter = require('./routes/businesses');
-const transactionsRouter = require('./routes/transactions');
-const { findOrCreateUser } = require('./db');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import goalsRouter from './routes/goals.js';
+import billsRouter from './routes/bills.js';
+import businessesRouter from './routes/businesses.js';
+import transactionsRouter from './routes/transactions.js';
+import { findOrCreateUser } from './db.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = process.env.PORT || 3000;
 
