@@ -2,7 +2,6 @@ import {
   clearStoredUser,
   fetchDashboardData,
   getStoredUser,
-  renderGoogleSignInButton,
 } from "../modules/auth.js";
 import { initializeTheme } from "../modules/theme.js";
 import { renderNav } from "../ui/components.js";
@@ -10,22 +9,7 @@ import { renderNav } from "../ui/components.js";
 const appRoot = document.getElementById("app");
 
 function renderSignedOutProfile() {
-  const content = document.createElement("section");
-  content.className = "login-form";
-  content.innerHTML = `
-    <h2 class="section-title">Sign in to view your profile</h2>
-    <p>Use Google to retrieve your account details and synced transaction history.</p>
-    <div id="profile-google-login" style="display: flex; justify-content: center;"></div>
-  `;
-  appRoot.appendChild(content);
-
-  renderGoogleSignInButton(content.querySelector("#profile-google-login"), {
-    onSuccess: () => renderPage(),
-    text: "signin_with",
-  }).catch(() => {
-    content.querySelector("#profile-google-login").innerHTML =
-      '<p class="auth-note">Google sign-in is unavailable right now.</p>';
-  });
+  window.location.href = 'login.html';
 }
 
 function renderSignedInProfile(user, dashboard) {
@@ -36,42 +20,72 @@ function renderSignedInProfile(user, dashboard) {
       ? "Guest account"
       : "Local account";
 
-  const content = document.createElement("section");
-  content.className = "transaction-form profile-card";
+  const content = document.createElement("div");
   content.innerHTML = `
-    <div class="account-summary">
-      ${user.picture ? `<img src="${user.picture}" alt="${user.name}" />` : ""}
-      <div>
-        <strong>Welcome, ${user.name}</strong>
-        <p>${accountLabel}</p>
-      </div>
-    </div>
-    <div class="metric-grid compact-metrics">
-      <div class="metric-panel"><h3>Synced transactions</h3><p>${transactions.length}</p></div>
-      <div class="metric-panel"><h3>Goals</h3><p>${dashboard?.goals?.length || 0}</p></div>
-      <div class="metric-panel"><h3>Bills</h3><p>${dashboard?.bills?.length || 0}</p></div>
-    </div>
-  `;
+    <header>
+      <h1 class="page-title">Profile</h1>
+    </header>
+    <main>
+      <section id="profile-card">
+        <div class="card-header">
+          <h2>${user.name || "User"}</h2>
+          <p>${accountLabel}</p>
+        </div>
+        <div class="card-body">
+          <h3>Account Balance</h3>
+          <p class="balance">KES ${dashboard?.balance || "0.00"}</p>
+          <h3>Recent Transactions</h3>
+          <ul class="transactions-list">
+            ${transactions
+      .map(
+        (t) => `<li>${t.description} - KES ${t.amount}</li>`
+      )
+      .join("")}
+          </ul>
+          ${transactions.length === 0 ? "<p>No transactions yet.</p>" : ""}
+        </div>
+        <div class="card-footer">
+          <button id="sign-out" class="button-danger">Sign Out</button>
+          <button id="go-to-dashboard" class="button">Go to Dashboard</button>
+        </div>
+      </section>
+      <section id="profile-actions">
+        <h2>Account Actions</h2>
+        <button class="button-secondary">Change Password</button>
+        <button class="button-secondary">Update Profile</button>
+      </section>
+    </main>
+    `;
+
   appRoot.appendChild(content);
+
+  if (user.guest) {
+    appRoot.querySelector("#profile-actions").style.display = "none";
+  }
+
+  appRoot.querySelector("#sign-out").addEventListener("click", () => {
+    clearStoredUser();
+    renderPage();
+  });
+
+  appRoot.querySelector("#go-to-dashboard").addEventListener("click", () => {
+    window.location.href = "/main.html";
+  });
 }
 
 async function renderPage() {
+  const user = getStoredUser();
   initializeTheme();
+
   appRoot.innerHTML = "";
-  appRoot.appendChild(renderNav());
+  renderNav(appRoot);
 
-  const header = document.createElement("header");
-  header.innerHTML = `<h1 class="page-title">Profile Dashboard</h1>`;
-  appRoot.appendChild(header);
-
-  const storedUser = getStoredUser();
-  if (!storedUser) {
+  if (user) {
+    const dashboard = await fetchDashboardData(user.token);
+    renderSignedInProfile(user, dashboard);
+  } else {
     renderSignedOutProfile();
-    return;
   }
-
-  const dashboard = await fetchDashboardData(storedUser);
-  renderSignedInProfile(dashboard?.user || storedUser, dashboard);
 }
 
 renderPage();

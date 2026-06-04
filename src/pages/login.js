@@ -36,7 +36,6 @@ function renderPage() {
   const header = document.createElement("header");
   header.innerHTML = `
     <h1 class="page-title">Login to Zimbari</h1>
-    <p>Sign in with email and password, use Google, or continue as a guest.</p>
   `;
   appRoot.appendChild(header);
 
@@ -52,10 +51,14 @@ function renderPage() {
       <input id="auth-password" type="password" placeholder="Password" />
     </label>
     <div class="form-actions">
-      <button type="button" class="button" id="local-login">Sign in</button>
+      <button type="button" class="button" id="local-login">Login w/ email</button>
+    </div>
+    <div class="or-separator">or</div>
+    <div id="login-google-login" style="margin-top: 18px; display: flex; justify-content: center;"></div>
+     <div class="or-separator">or</div>
+    <div class="form-actions">
       <button type="button" class="button-secondary" id="guest-login">Continue as Guest</button>
     </div>
-    <div id="login-google-login" style="margin-top: 18px; display: flex; justify-content: center;"></div>
   `;
   appRoot.appendChild(form);
 
