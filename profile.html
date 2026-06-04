@@ -10,8 +10,30 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
+   /* 
     <div id="app" class="app-shell"></div>
     <script type="module" src="/src/modules/pwa.js"></script>
     <script type="module" src="/src/pages/profile.js"></script>
+   */
+    <div id="app" class="app-shell">
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "945932960900-fbm7qt7mg5ntuf3b2rk8q1nn7s43c022.apps.googleusercontent.com",
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("buttonDiv"),
+                { theme: "outline", size: "large" }  // Customization options
+            );
+
+            google.accounts.id.prompt(); 
+        };
+
+        function handleCredentialResponse(response) {
+            // The response object contains the authentication credential
+            alert("Login Successful! Check console for JWT payload.");
+            console.log("JWT:", response.credential);
+        }
+    </div>
   </body>
 </html>
