@@ -1,39 +1,34 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import authRouter from './routes/auth.js';
-import dashboardRouter from './routes/dashboard.js';
-import billsRouter from './routes/bills.js';
-import businessesRouter from './routes/businesses.js';
-import goalsRouter from './routes/goals.js';
-import transactionsRouter from './routes/transactions.js';
 
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require('express');
+const path = require('path');
+const goalsRouter = require('./routes/goals');
+const billsRouter = require('./routes/bills');
+const businessesRouter = require('./routes/businesses');
+const transactionsRouter = require('./routes/transactions');
+const { findOrCreateUser } = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../dist')));
 
-// API routes
-app.use('/api/auth', authRouter);
-app.use('/api/users', dashboardRouter);
+app.use('/api/goals', goalsRouter);
 app.use('/api/bills', billsRouter);
 app.use('/api/businesses', businessesRouter);
-app.use('/api/goals', goalsRouter);
 app.use('/api/transactions', transactionsRouter);
 
-// Serve static files
-const staticPath = path.join(__dirname, '..', 'dist');
-app.use(express.static(staticPath));
+app.post('/api/auth/google', async (req, res) => {
+  try {
+    const user = await findOrCreateUser(req.body);
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-// Catch-all to serve index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(staticPath, 'index.html'));
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.listen(port, () => {

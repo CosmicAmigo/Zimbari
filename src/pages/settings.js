@@ -1,8 +1,4 @@
-import {
-  clearStoredUser,
-  getStoredUser,
-  renderGoogleSignInButton,
-} from "../modules/auth.js";
+import { clearStoredUser, getStoredUser, renderGoogleSignInButton, storeUser } from "../modules/auth.js";
 import { applyTheme, initializeTheme } from "../modules/theme.js";
 import { renderNav } from "../ui/components.js";
 
@@ -38,10 +34,6 @@ function renderSignedInSettings(user) {
     <label>Display name <input id="display-name" value="${user.name || ""}" /></label>
     <label>Email <input value="${user.email || ""}" disabled /></label>
     
-    <h2 class="section-title">Integrations</h2>
-    <label><input id="mpesa-hook" type="checkbox" /> Enable M-Pesa Hook (Track SMS transactions)</label>
-    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 8px;">Automatically log M-Pesa transactions from incoming SMS messages to your account.</p>
-    
     <div style="margin-top: 24px; display: flex; gap: 12px;">
       <button class="button" id="save-settings">Save settings</button>
       <button class="button-secondary" id="sign-out">Sign out</button>
@@ -54,25 +46,18 @@ function renderSignedInSettings(user) {
   });
 
   content.querySelector("#save-settings").addEventListener("click", () => {
-    const savedUser = {
+    const updatedUser = {
       ...user,
       name: content.querySelector("#display-name").value,
-      mpesaHookEnabled: content.querySelector("#mpesa-hook").checked,
     };
-    localStorage.setItem("zimbari-user", JSON.stringify(savedUser));
+    storeUser(updatedUser);
     alert("Settings saved.");
   });
 
   content.querySelector("#sign-out").addEventListener("click", () => {
     clearStoredUser();
-    renderPage();
+    window.location.href = "index.html";
   });
-
-  // Load saved MPESA hook setting
-  const savedUser = JSON.parse(localStorage.getItem("zimbari-user") || "{}");
-  if (savedUser.mpesaHookEnabled) {
-    content.querySelector("#mpesa-hook").checked = true;
-  }
 }
 
 function renderPage() {
