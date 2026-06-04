@@ -5,33 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#2563eb" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <title>Google - Zimbari</title>
+    <title>Google Authentication - Zimbari</title>
     <link rel="stylesheet" href="/src/style.css" />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
-<div id="app" class="app-shell">
-      <h1>Log in to Your Account</h1>  
-      <div id="buttonDiv"></div>
-      <script>
-        window.onload = function () {
-            google.accounts.id.initialize({
-                client_id: "945932960900-fbm7qt7mg5ntuf3b2rk8q1nn7s43c022.apps.googleusercontent.com",
-                callback: handleCredentialResponse
-            });
-            google.accounts.id.renderButton(
-                document.getElementById("buttonDiv"),
-                { theme: "outline", size: "large" }  // Customization options
-            );
+    <div id="app" class="app-shell" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center;">
+      <header>
+        <h1 class="page-title" id="auth-status">Authenticating with Google...</h1>
+        <p id="auth-subtitle">Please wait while we verify your identity.</p>
+      </header>
+      
+      <div id="buttonDiv" style="margin-top: 24px;"></div>
+    </div>
 
-            google.accounts.id.prompt(); 
-        };
+    <script>
+      window.onload = function () {
+          // Initialize Google Auth Flow using your registered Client ID
+          google.accounts.id.initialize({
+              client_id: "945932960900-fbm7qt7mg5ntuf3b2rk8q1nn7s43c022.apps.googleusercontent.com",
+              callback: handleCredentialResponse
+          });
 
-        function handleCredentialResponse(response) {
-            // The response object contains the authentication credential
-            alert("Login Successful! Check console for JWT payload.");
-            console.log("JWT:", response.credential);
-        }
-        </script>
-</div>
-</body>
+          // Render the fallback core UI button if background auto-login isn't immediately parsed
+          google.accounts.id.renderButton(
+              document.getElementById("buttonDiv"),
+              { theme: "outline", size: "large" }
+          );
+
+          // Fire the Google One-Tap contextual identity menu
+          google.accounts.id.prompt(); 
+      };
+
+      /**
+       * Securely extracts and base64-decodes the middle payload block of Google's identity token.
+       */
+      function decodeJwt(token) {
+          try {
+              const base64Url = token.split('.')[1];
+              const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+              const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                  return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+              }).join(''));
+
+              return JSON.parse(jsonPayload);
+          } catch (error) {
+              console.error("JWT token compilation decoding failure:", error);
+              return null;
+          }
+      }
+
+      /**
+       * Core Authentication Handler invoked by Google's client SDK callback
+       */
+      async function handleCredentialResponse(response) {
+          const statusHeading = document.getElementById("auth-status");
+          const statusSubtitle = document.getElementById("auth-subtitle");
+          
+          const jwtToken = response.credential;
+          const payload = decodeJwt(jwtToken);
+
+          if (!payload) {
+              statusHeading.innerText = "Authentication Error";
+              statusSubtitle.innerText = "We couldn't read your identity profile token. Please try again.";
+              return;
+          }
+
+          // Format metadata objects using the database columns defined in schema.sql
+          const googleUserData = {
+              email: payload.email,
+              name: payload.name,
+              picture: payload.picture
+          };
+
+          try {
+              statusHeading.innerText = "Syncing with Zimbari...";
+              statusSubtitle.innerText = "Creating or recovering your core profile engine securely...";
+
+              // 1. Dispatch payload directly over to the live Express server architecture
+              const serverResponse = await fetch('/api/auth/google', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(googleUserData)
+              });
+
+              if (!serverResponse.ok) {
+                  throw new Error(`Server returned HTTP code ${serverResponse.status}`);
+              }
+
+              // This returns the exact parsed object returned by findOrCreateUser() containing database user.id
+              const responseData = await serverResponse.json();
+              const databaseUser = responseData.user;
+
+              // 2. Commit the authenticated identity blueprint into LocalStorage 
+              // This fully establishes a logged-in state across login.js and settings.js
+              localStorage.setItem("user", JSON.stringify({
+                  id: databaseUser.id,
+                  name: databaseUser.name,
+                  email: databaseUser.email,
+                  picture: databaseUser.picture,
+                  googleAuth: true
+              }));
+
+              statusHeading.innerText = "Access Granted!";
+              statusSubtitle.innerText = "Redirecting you to your main operational dashboard...";
+
+              // 3. Clean exit routing path directly onto the dashboard
+              setTimeout(() => {
+                  window.location.href = "main.html";
+              }, 400);
+
+          } catch (error) {
+              console.error("Authentication backend pipeline synchronization failure:", error);
+              statusHeading.innerText = "Connection Failed";
+              statusSubtitle.innerText = "Could not synchronize credentials with the database engine.";
+          }
+      }
+    </script>
+  </body>
+</html>
