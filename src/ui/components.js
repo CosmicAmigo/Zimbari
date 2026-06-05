@@ -5,7 +5,7 @@ const articleItems = articles.slice(0, 3);
 
 function renderArticles() {
   const section = document.createElement("section");
-  section.innerHTML = '<h2 class="section-title">Articles</h2>';
+  section.innerHTML = '<h2 class="section-title">Tips</h2>';
   const grid = document.createElement("div");
   grid.className = "card-grid";
 
@@ -245,9 +245,9 @@ export function renderNav() {
         <span class="nav-icon">◷</span>
         <span class="nav-label">Bills</span>
       </a>
-      <a class="nav-link ${currentPage === "articles" ? "active" : ""}" href="articles" title="Articles">
+      <a class="nav-link ${currentPage === "articles" ? "active" : ""}" href="articles" title="Tips">
         <span class="nav-icon">✦</span>
-        <span class="nav-label">Articles</span>
+        <span class="nav-label">Tips</span>
       </a>
     </div>
     <div class="nav-section nav-bottom">
