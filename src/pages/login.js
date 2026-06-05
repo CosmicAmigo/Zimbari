@@ -48,7 +48,8 @@ function renderPage() {
   const form = document.createElement("section");
   form.className = "login-form";
   form.innerHTML = `
-    <label>
+  <center>  
+  <label>
       Email or Username
       <input id="auth-username" type="text" placeholder="email@example.com or username" />
     </label>
@@ -63,6 +64,7 @@ function renderPage() {
     <div class="form-actions">
       <button type="button" class="button-secondary" id="guest-login">Continue as Guest</button>
     </div>
+    </center>
   `;
   appRoot.appendChild(form);
 
