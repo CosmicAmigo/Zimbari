@@ -59,11 +59,7 @@ function renderPage() {
     <div class="form-actions">
       <button type="button" class="button" id="local-login">Login w/ email</button>
     </div>
-    <div class="or-separator">or</div>
-    <div id="google-click-wrapper" style="margin-top: 18px; display: flex; justify-content: center;">
-      <div id="login-google-login"></div>
-    </div>
-     <div class="or-separator">or</div>
+    <center> <div class="or-separator">or</div> </center>
     <div class="form-actions">
       <button type="button" class="button-secondary" id="guest-login">Continue as Guest</button>
     </div>
