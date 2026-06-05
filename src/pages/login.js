@@ -58,7 +58,7 @@ function renderPage() {
       <input id="auth-password" type="password" placeholder="Password" />
     </label>
     <div class="form-actions">
-      <button type="button" class="button" id="local-login">Login w/ email</button>
+      <button type="button" class="button" id="local-login">Login with email</button>
     </div>
     <center> <div class="or-separator">or</div> </center>
     <div class="form-actions">
